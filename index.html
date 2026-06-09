@@ -13,18 +13,18 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2f5;color:#1a1a1a;max-width:480px;margin:0 auto;}
-.topbar{background:#1a73e8;color:#fff;padding:14px 16px;font-size:17px;font-weight:600;position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:8px;}
+.topbar{background:#1a73e8;color:#fff;padding:14px 16px;font-size:17px;font-weight:600;position:sticky;top:0;z-index:10;}
 .body{padding:12px;}
 .card{background:#fff;border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);}
-video{width:100%;border-radius:10px;display:none;background:#000;max-height:280px;object-fit:cover;}
+video{width:100%;border-radius:10px;display:none;background:#000;max-height:260px;object-fit:cover;}
 #placeholder{text-align:center;padding:32px 20px;color:#aaa;}
-#placeholder svg{display:block;margin:0 auto 10px;}
 .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
 button{font-family:inherit;font-size:14px;font-weight:500;border-radius:10px;padding:12px 14px;cursor:pointer;border:none;display:flex;align-items:center;justify-content:center;gap:6px;transition:opacity .15s,transform .1s;}
 button:active{transform:scale(0.96);}
 .btn-blue{background:#1a73e8;color:#fff;}
 .btn-green{background:#34a853;color:#fff;}
 .btn-gray{background:#f1f3f4;color:#444;}
+.btn-orange{background:#f57c00;color:#fff;}
 button:disabled{opacity:0.35;cursor:not-allowed;}
 .status{font-size:13px;padding:10px 13px;border-radius:9px;margin:10px 0;display:flex;align-items:center;gap:7px;}
 .status.info{background:#e8f0fe;color:#1a73e8;}
@@ -32,12 +32,17 @@ button:disabled{opacity:0.35;cursor:not-allowed;}
 .status.err{background:#fce8e6;color:#c62828;}
 .status.loading{background:#e8f0fe;color:#1a73e8;}
 .ai-box{display:none;border:1.5px solid #c8e6c9;border-radius:12px;padding:14px;background:#f9fffd;margin:10px 0;}
+.edit-box{display:none;border:1.5px solid #ffe0b2;border-radius:12px;padding:14px;background:#fffbf5;margin:10px 0;}
+.edit-title{font-size:12px;color:#e65100;font-weight:600;margin-bottom:10px;}
 .ai-title{font-size:12px;color:#2e7d32;font-weight:600;margin-bottom:10px;}
 label{font-size:12px;color:#666;display:block;margin-bottom:4px;margin-top:10px;}
 label:first-of-type{margin-top:0;}
 input[type=text],input[type=number]{width:100%;border:1.5px solid #e0e0e0;border-radius:9px;padding:10px 13px;font-size:15px;font-family:inherit;background:#fff;color:#111;}
 input:focus{outline:none;border-color:#1a73e8;}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.thumb-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;}
+.thumb-row img{width:60px;height:60px;object-fit:cover;border-radius:8px;flex-shrink:0;display:none;}
+.thumb-row .fields{flex:1;}
 .items-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
 .items-hdr strong{font-size:15px;}
 .badge{font-size:12px;background:#e8f0fe;color:#1a73e8;border-radius:20px;padding:3px 10px;font-weight:600;}
@@ -46,31 +51,26 @@ input:focus{outline:none;border-color:#1a73e8;}
 .item-info{flex:1;min-width:0;}
 .item-name{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .item-meta{font-size:11px;color:#999;margin-top:2px;}
-.item-qty{font-size:15px;font-weight:700;color:#1a73e8;margin:0 8px;white-space:nowrap;}
-.del{background:none;border:none;color:#e53935;font-size:20px;padding:4px;opacity:0.5;}
-.del:hover{opacity:1;}
-.export-btn{width:100%;background:#1a73e8;color:#fff;border-radius:12px;padding:14px;font-size:15px;font-weight:600;margin-top:4px;border:none;}
+.item-qty{font-size:15px;font-weight:700;color:#1a73e8;margin:0 6px;white-space:nowrap;}
+.item-actions{display:flex;gap:4px;}
+.edit-btn{background:#fff3e0;border:none;color:#e65100;font-size:13px;padding:6px 8px;border-radius:7px;cursor:pointer;font-family:inherit;}
+.del-btn{background:#fce8e6;border:none;color:#c62828;font-size:13px;padding:6px 8px;border-radius:7px;cursor:pointer;font-family:inherit;}
+.export-btn{width:100%;background:#1a73e8;color:#fff;border-radius:12px;padding:14px;font-size:15px;font-weight:600;margin-top:4px;border:none;cursor:pointer;font-family:inherit;}
+.export-btn:disabled{opacity:0.35;}
 .empty{text-align:center;padding:28px;color:#bbb;font-size:13px;}
-.thumb-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;}
-.thumb-row img{width:60px;height:60px;object-fit:cover;border-radius:8px;flex-shrink:0;display:none;}
-.thumb-row .fields{flex:1;}
 </style>
 </head>
 <body>
-
-<div class="topbar">
-  <span>📦</span> Бараа Бүртгэл
-</div>
-
+<div class="topbar">📦 Бараа Бүртгэл</div>
 <div class="body">
 
 <div class="card">
-  <div id="placeholder">
-    <svg width="52" height="52" fill="none" stroke="#ccc" stroke-width="1.5" viewBox="0 0 24 24">
+  <div id="placeholder" style="text-align:center;padding:32px 20px;color:#aaa;">
+    <svg width="52" height="52" fill="none" stroke="#ccc" stroke-width="1.5" viewBox="0 0 24 24" style="display:block;margin:0 auto 10px;">
       <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
       <circle cx="12" cy="13" r="4"/>
     </svg>
-    <div style="font-size:14px;color:#aaa;">Камер нээгээд бараагаа зурагт авна уу</div>
+    <div style="font-size:14px;">Камер нээгээд бараагаа зурагт авна уу</div>
   </div>
   <video id="vid" autoplay playsinline></video>
   <canvas id="cnv" style="display:none"></canvas>
@@ -82,6 +82,7 @@ input:focus{outline:none;border-color:#1a73e8;}
 
 <div class="status info" id="statusBox">📌 Камер нээгээд бараагаа зурагт авна уу</div>
 
+<!-- Шинэ бараа нэмэх хэсэг -->
 <div class="ai-box" id="aiBox">
   <div class="ai-title">✅ AI таньлаа — засаад нэмнэ үү</div>
   <div class="thumb-row">
@@ -92,20 +93,36 @@ input:focus{outline:none;border-color:#1a73e8;}
     </div>
   </div>
   <div class="row2">
-    <div>
-      <label>Тоо ширхэг</label>
-      <input type="number" id="iQty" value="1" min="0.1" step="any"/>
-    </div>
-    <div>
-      <label>Нэгж</label>
-      <input type="text" id="iUnit" placeholder="ш, кг, л..."/>
-    </div>
+    <div><label>Тоо ширхэг</label><input type="number" id="iQty" value="1" min="0.1" step="any"/></div>
+    <div><label>Нэгж</label><input type="text" id="iUnit" placeholder="ш, кг, л..."/></div>
   </div>
   <label>Тэмдэглэл</label>
   <input type="text" id="iNote" placeholder="(заавал биш)"/>
   <div class="btn-row" style="margin-top:12px;">
     <button onclick="cancelItem()" class="btn-gray">✕ Цуцлах</button>
-    <button onclick="addItem()" class="btn-green">＋ Жагсаалтад нэмэх</button>
+    <button onclick="addItem()" class="btn-green">＋ Нэмэх</button>
+  </div>
+</div>
+
+<!-- Засах хэсэг -->
+<div class="edit-box" id="editBox">
+  <div class="edit-title">✏️ Мэдээлэл засах</div>
+  <div class="thumb-row">
+    <img id="editThumb" alt="зураг"/>
+    <div class="fields">
+      <label>Барааны нэр</label>
+      <input type="text" id="eName" placeholder="нэр..."/>
+    </div>
+  </div>
+  <div class="row2">
+    <div><label>Тоо ширхэг</label><input type="number" id="eQty" value="1" min="0.1" step="any"/></div>
+    <div><label>Нэгж</label><input type="text" id="eUnit" placeholder="ш, кг, л..."/></div>
+  </div>
+  <label>Тэмдэглэл</label>
+  <input type="text" id="eNote" placeholder="(заавал биш)"/>
+  <div class="btn-row" style="margin-top:12px;">
+    <button onclick="cancelEdit()" class="btn-gray">✕ Болих</button>
+    <button onclick="saveEdit()" class="btn-orange">💾 Хадгалах</button>
   </div>
 </div>
 
@@ -113,17 +130,11 @@ input:focus{outline:none;border-color:#1a73e8;}
   <strong>Жагсаалт</strong>
   <span class="badge" id="countBadge">0 бараа</span>
 </div>
+<div id="itemList"><div class="empty">Одоогоор бараа байхгүй</div></div>
 
-<div id="itemList">
-  <div class="empty">Одоогоор бараа байхгүй</div>
+<button class="export-btn" id="exportBtn" disabled onclick="exportExcel()">⬇ Excel татах (.xlsx)</button>
+
 </div>
-
-<button class="export-btn" id="exportBtn" disabled onclick="exportExcel()">
-  ⬇ Excel татах (.xlsx)
-</button>
-
-</div><!-- /body -->
-
 <script>
 const vid=document.getElementById('vid');
 const cnv=document.getElementById('cnv');
@@ -131,8 +142,10 @@ const startBtn=document.getElementById('startBtn');
 const snapBtn=document.getElementById('snapBtn');
 const statusBox=document.getElementById('statusBox');
 const aiBox=document.getElementById('aiBox');
+const editBox=document.getElementById('editBox');
 const thumb=document.getElementById('thumb');
-let stream=null, items=[], currentImg='';
+const editThumb=document.getElementById('editThumb');
+let stream=null, items=[], currentImg='', editingId=null;
 
 function setStatus(msg,type='info'){
   statusBox.className='status '+type;
@@ -163,22 +176,17 @@ startBtn.addEventListener('click',async()=>{
     startBtn.className='btn-gray';
     setStatus('✅ Камер бэлэн — зургаа авна уу','ok');
   }catch(e){
-    if(e.name==='NotAllowedError'){
-      setStatus('❌ Камерт зөвшөөрөл өгөөгүй — дэлгэцийн дээд хэсгийн цоожны дүрс дарж зөвшөөрнө үү','err');
-    } else {
-      setStatus('❌ Камер нээгдсэнгүй: '+e.message,'err');
-    }
+    setStatus('❌ Камерт зөвшөөрөл өгөөгүй — хаягийн мөрний цоож дарж зөвшөөрнө үү','err');
   }
 });
 
 snapBtn.addEventListener('click',()=>{
-  cnv.width=vid.videoWidth;
-  cnv.height=vid.videoHeight;
+  cnv.width=vid.videoWidth; cnv.height=vid.videoHeight;
   cnv.getContext('2d').drawImage(vid,0,0);
-  currentImg=cnv.toDataURL('image/jpeg',0.85);
-  thumb.src=currentImg;
-  thumb.style.display='block';
+  currentImg=cnv.toDataURL('image/jpeg',0.82);
+  thumb.src=currentImg; thumb.style.display='block';
   aiBox.style.display='none';
+  editBox.style.display='none';
   analyzeImage(currentImg);
 });
 
@@ -226,21 +234,55 @@ function addItem(){
   const note=document.getElementById('iNote').value.trim();
   if(!name){setStatus('❌ Барааны нэр оруулна уу','err');return;}
   items.push({id:Date.now(),name,qty,unit,note,img:currentImg,time:new Date().toLocaleString('mn-MN')});
-  aiBox.style.display='none';
-  currentImg='';
-  thumb.style.display='none';
+  aiBox.style.display='none'; currentImg=''; thumb.style.display='none';
   renderList();
   setStatus('✅ Нэмэгдлээ — дараагийн бараагаа авна уу','ok');
 }
 
 function cancelItem(){
+  aiBox.style.display='none'; thumb.style.display='none'; currentImg='';
+  setStatus('📌 Цуцлагдлаа');
+}
+
+// Засах функцууд
+window.startEdit=function(id){
+  const it=items.find(i=>i.id===id);
+  if(!it)return;
+  editingId=id;
+  document.getElementById('eName').value=it.name;
+  document.getElementById('eQty').value=it.qty;
+  document.getElementById('eUnit').value=it.unit;
+  document.getElementById('eNote').value=it.note||'';
+  if(it.img){ editThumb.src=it.img; editThumb.style.display='block'; }
+  else { editThumb.style.display='none'; }
   aiBox.style.display='none';
-  thumb.style.display='none';
-  currentImg='';
+  editBox.style.display='block';
+  editBox.scrollIntoView({behavior:'smooth',block:'nearest'});
+  setStatus('✏️ Мэдээллийг засаад хадгална уу','info');
+};
+
+function saveEdit(){
+  const name=document.getElementById('eName').value.trim();
+  const qty=parseFloat(document.getElementById('eQty').value)||1;
+  const unit=document.getElementById('eUnit').value.trim()||'ш';
+  const note=document.getElementById('eNote').value.trim();
+  if(!name){setStatus('❌ Барааны нэр оруулна уу','err');return;}
+  const idx=items.findIndex(i=>i.id===editingId);
+  if(idx>-1){
+    items[idx]={...items[idx],name,qty,unit,note};
+  }
+  editBox.style.display='none'; editingId=null;
+  renderList();
+  setStatus('✅ Хадгалагдлаа','ok');
+}
+
+function cancelEdit(){
+  editBox.style.display='none'; editingId=null;
   setStatus('📌 Цуцлагдлаа');
 }
 
 window.removeItem=function(id){
+  if(!confirm('Устгах уу?'))return;
   items=items.filter(i=>i.id!==id);
   renderList();
 };
@@ -256,28 +298,91 @@ function renderList(){
   }
   document.getElementById('itemList').innerHTML=items.map(it=>`
     <div class="item">
-      ${it.img?`<img class="iimg" src="${it.img}" alt=""/>`:''}
+      ${it.img?`<img class="iimg" src="${it.img}" alt=""/>`:'<div style="width:46px;height:46px;background:#f1f3f4;border-radius:7px;margin-right:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;">📦</div>'}
       <div class="item-info">
         <div class="item-name">${esc(it.name)}</div>
         <div class="item-meta">${it.time}${it.note?' · '+esc(it.note):''}</div>
       </div>
       <div class="item-qty">${it.qty} ${esc(it.unit)}</div>
-      <button class="del" onclick="removeItem(${it.id})">🗑</button>
+      <div class="item-actions">
+        <button class="edit-btn" onclick="startEdit(${it.id})">✏️</button>
+        <button class="del-btn" onclick="removeItem(${it.id})">🗑</button>
+      </div>
     </div>
   `).join('');
 }
 
-function exportExcel(){
+// Excel thumbnail-тай export
+async function exportExcel(){
   if(!items.length)return;
-  const data=[
-    ['№','Барааны нэр','Тоо ширхэг','Нэгж','Тэмдэглэл','Бүртгэсэн огноо'],
-    ...items.map((it,i)=>[i+1,it.name,it.qty,it.unit,it.note||'',it.time])
-  ];
-  const wb=XLSX.utils.book_new();
-  const ws=XLSX.utils.aoa_to_sheet(data);
-  ws['!cols']=[{wch:4},{wch:26},{wch:12},{wch:8},{wch:24},{wch:22}];
-  XLSX.utils.book_append_sheet(wb,ws,'Бараа материал');
-  XLSX.writeFile(wb,'бараа_бүртгэл_'+new Date().toLocaleDateString('mn-MN').replace(/\//g,'-')+'.xlsx');
+  setStatus('⏳ Excel бэлдэж байна...','loading');
+  
+  try{
+    const wb=XLSX.utils.book_new();
+    
+    // Worksheet data
+    const wsData=[['№','Зураг','Барааны нэр','Тоо ширхэг','Нэгж','Тэмдэглэл','Бүртгэсэн огноо']];
+    items.forEach((it,i)=>{
+      wsData.push([i+1,'',it.name,it.qty,it.unit,it.note||'',it.time]);
+    });
+    
+    const ws=XLSX.utils.aoa_to_sheet(wsData);
+    ws['!cols']=[{wch:4},{wch:14},{wch:26},{wch:12},{wch:8},{wch:22},{wch:22}];
+    
+    // Мөр өндөр тохируулах (зурагтай мөрүүдэд)
+    ws['!rows']=[{hpt:20}];
+    items.forEach(()=>{ ws['!rows'].push({hpt:55}); });
+    
+    XLSX.utils.book_append_sheet(wb,ws,'Бараа материал');
+    
+    // Зурагтай items байвал image worksheet нэмэх
+    const imgItems=items.filter(it=>it.img);
+    if(imgItems.length>0){
+      const imgData=[['№','Барааны нэр','Зургийн мэдээлэл']];
+      imgItems.forEach((it,i)=>{
+        imgData.push([i+1,it.name,'Зураг доор харна уу (base64)']);
+      });
+      const ws2=XLSX.utils.aoa_to_sheet(imgData);
+      XLSX.utils.book_append_sheet(wb,ws2,'Зургийн мэдээлэл');
+    }
+    
+    // Зургуудыг HTML хүснэгтээр тусдаа файл болгон татах
+    if(imgItems.length>0){
+      let html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Бараа зургууд</title>
+      <style>body{font-family:sans-serif;padding:20px;}table{border-collapse:collapse;width:100%;}
+      th,td{border:1px solid #ddd;padding:8px;text-align:left;}th{background:#1a73e8;color:#fff;}
+      img{width:80px;height:80px;object-fit:cover;border-radius:6px;}tr:nth-child(even){background:#f9f9f9;}</style>
+      </head><body><h2>📦 Бараа материалын бүртгэл</h2>
+      <p style="color:#666;margin-bottom:16px;">${new Date().toLocaleString('mn-MN')}</p>
+      <table><tr><th>№</th><th>Зураг</th><th>Барааны нэр</th><th>Тоо</th><th>Нэгж</th><th>Тэмдэглэл</th><th>Огноо</th></tr>`;
+      items.forEach((it,i)=>{
+        html+=`<tr>
+          <td>${i+1}</td>
+          <td>${it.img?`<img src="${it.img}" alt=""/>`:'—'}</td>
+          <td><strong>${esc(it.name)}</strong></td>
+          <td>${it.qty}</td>
+          <td>${esc(it.unit)}</td>
+          <td>${esc(it.note||'')}</td>
+          <td style="font-size:12px;color:#999;">${it.time}</td>
+        </tr>`;
+      });
+      html+=`</table></body></html>`;
+      
+      // HTML файл татах
+      const hblob=new Blob([html],{type:'text/html;charset=utf-8'});
+      const ha=document.createElement('a');
+      ha.href=URL.createObjectURL(hblob);
+      ha.download='бараа_зургуудтай_'+new Date().toLocaleDateString('mn-MN').replace(/\//g,'-')+'.html';
+      ha.click();
+    }
+    
+    // Excel татах
+    XLSX.writeFile(wb,'бараа_бүртгэл_'+new Date().toLocaleDateString('mn-MN').replace(/\//g,'-')+'.xlsx');
+    setStatus('✅ Татагдлаа! Excel + зургийн HTML файл хоёулаа татагдлаа','ok');
+    
+  }catch(e){
+    setStatus('❌ Алдаа гарлаа: '+e.message,'err');
+  }
 }
 
 if('serviceWorker' in navigator){
